@@ -1,0 +1,632 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tushar Panchal</title>
+<meta name="description" content="DevOps engineer. Hub-and-spoke networks on AWS, Azure and GCP, private Kubernetes, and CI pipelines that never hold a cloud key.">
+<meta property="og:title" content="Tushar Panchal — DevOps engineer">
+<meta property="og:description" content="Hub-and-spoke networks on AWS, Azure and GCP, private Kubernetes, keyless CI.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://tushar-ops23.github.io/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23f3f0e8'/%3E%3Cg stroke='%231b2430' stroke-width='2' fill='none'%3E%3Ccircle cx='16' cy='16' r='5'/%3E%3Cpath d='M16 11V3M11.7 18.5 5 23M20.3 18.5 27 23'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<script>
+  try { var t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+<style>
+  :root {
+    --desk: #dedad0;
+    --paper: #f3f0e8;
+    --grid: rgba(27, 36, 48, 0.055);
+    --ink: #1b2430;
+    --ink-soft: #4d5663;
+    --line: #1b2430;
+    --line-soft: rgba(27, 36, 48, 0.28);
+    --accent: #c0412b;
+    --accent-soft: rgba(192, 65, 43, 0.1);
+    --sans: "IBM Plex Sans", system-ui, sans-serif;
+    --cond: "IBM Plex Sans Condensed", "IBM Plex Sans", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, monospace;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --desk: #0c1f36;
+      --paper: #16395f;
+      --grid: rgba(220, 232, 247, 0.07);
+      --ink: #e9f0f8;
+      --ink-soft: #b4c4d8;
+      --line: #dce8f7;
+      --line-soft: rgba(220, 232, 247, 0.35);
+      --accent: #ffb454;
+      --accent-soft: rgba(255, 180, 84, 0.14);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --desk: #0c1f36;
+    --paper: #16395f;
+    --grid: rgba(220, 232, 247, 0.07);
+    --ink: #e9f0f8;
+    --ink-soft: #b4c4d8;
+    --line: #dce8f7;
+    --line-soft: rgba(220, 232, 247, 0.35);
+    --accent: #ffb454;
+    --accent-soft: rgba(255, 180, 84, 0.14);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--desk);
+    color: var(--ink);
+    font: 16px/1.6 var(--sans);
+  }
+  a { color: inherit; text-decoration-color: var(--accent); text-underline-offset: 3px; }
+  a:hover { color: var(--accent); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .sheet {
+    max-width: 1080px;
+    margin: 40px auto;
+    background-color: var(--paper);
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 24px 24px;
+    border: 1.5px solid var(--line);
+    outline: 1px solid var(--line);
+    outline-offset: 6px;
+  }
+
+  .zones {
+    display: flex;
+    justify-content: space-around;
+    font: 11px var(--mono);
+    color: var(--ink-soft);
+    border-bottom: 1px solid var(--line-soft);
+    padding: 2px 0;
+  }
+  .zones.bottom { border-bottom: 0; border-top: 1px solid var(--line-soft); }
+
+  .strip {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 28px;
+    font: 12px var(--mono);
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .strip nav { display: flex; gap: 20px; flex-wrap: wrap; }
+  .strip nav a { text-decoration: none; }
+  .theme-btn {
+    font: inherit;
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--line-soft);
+    padding: 3px 10px;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .theme-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .inner { padding: 0 28px; }
+  section { padding: 56px 0; border-bottom: 1px solid var(--line-soft); }
+  section:last-of-type { border-bottom: 0; }
+
+  .label {
+    font: 12px var(--mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0 0 12px;
+  }
+  h1, h2, h3 { font-family: var(--cond); font-weight: 600; letter-spacing: 0.01em; margin: 0; }
+  h2 {
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  h2 .no {
+    font: 500 12px var(--mono);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: inline-grid;
+    place-items: center;
+    letter-spacing: 0;
+    flex: none;
+  }
+  h2::after { content: ""; flex: 1; border-bottom: 1px solid var(--line-soft); transform: translateY(-4px); }
+
+  /* hero */
+  .hero { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 40px; align-items: center; }
+  .hero h1 { font-size: clamp(44px, 7vw, 76px); line-height: 0.95; text-transform: uppercase; }
+  .lede { font-size: 19px; line-height: 1.55; max-width: 34em; margin: 22px 0 14px; }
+  .aside { color: var(--ink-soft); max-width: 34em; margin: 0 0 26px; }
+  .links { display: flex; flex-wrap: wrap; gap: 10px; }
+  .links a {
+    font: 13px var(--mono);
+    text-decoration: none;
+    border: 1px solid var(--line);
+    padding: 7px 12px;
+  }
+  .links a:hover { background: var(--accent-soft); border-color: var(--accent); }
+
+  figure { margin: 0; }
+  figcaption {
+    font: 12px/1.5 var(--mono);
+    color: var(--ink-soft);
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid var(--line-soft);
+  }
+  figcaption b { color: var(--ink); font-weight: 500; }
+
+  svg { display: block; width: 100%; height: auto; overflow: visible; }
+  svg .ln { stroke: var(--line); stroke-width: 1.4; fill: none; }
+  svg .ln-soft { stroke: var(--line-soft); stroke-width: 1; fill: none; }
+  svg .dash { stroke-dasharray: 5 5; }
+  svg .box { stroke: var(--line); stroke-width: 1.4; fill: var(--paper); }
+  svg .hub { stroke: var(--accent); stroke-width: 1.8; fill: var(--paper); }
+  svg .acc { stroke: var(--accent); stroke-width: 1.6; fill: none; }
+  svg .no-go { stroke: var(--accent); stroke-width: 1.2; }
+  svg text { font-family: var(--mono); font-size: 11px; fill: var(--ink); }
+  svg text.soft { fill: var(--ink-soft); font-size: 10px; }
+  svg text.big { font-family: var(--cond); font-size: 15px; font-weight: 600; letter-spacing: 0.06em; }
+  svg .arrow { fill: var(--line); }
+  svg .arrow-acc { fill: var(--accent); }
+  svg .dot { fill: var(--paper); stroke: var(--line); stroke-width: 1.2; }
+  .spoke-path { transition: stroke 0.2s; }
+  figure:hover .spoke-path { stroke: var(--accent); }
+
+  /* revision table */
+  table { width: 100%; border-collapse: collapse; }
+  .rev th, .rev td, .bom th, .bom td {
+    text-align: left;
+    vertical-align: top;
+    padding: 14px 14px 14px 0;
+    border-top: 1px solid var(--line-soft);
+  }
+  .rev th, .bom th {
+    font: 500 11px var(--mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    border-top: 1.5px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+  .rev td:first-child {
+    font: 500 20px var(--cond);
+    color: var(--accent);
+    width: 56px;
+  }
+  .rev .when { font: 13px var(--mono); color: var(--ink-soft); width: 150px; white-space: nowrap; }
+  .rev h3 { font-size: 19px; margin-bottom: 2px; }
+  .rev .where { color: var(--ink-soft); font-size: 14px; margin: 0 0 10px; }
+  .rev ul { margin: 0; padding-left: 18px; }
+  .rev li { margin-bottom: 6px; max-width: 62em; }
+  .rev li::marker { color: var(--accent); }
+
+  /* detail cards */
+  .intro-note { color: var(--ink-soft); max-width: 46em; margin: -8px 0 28px; }
+  .details { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .detail {
+    border: 1px solid var(--line);
+    background: var(--paper);
+    display: flex;
+    flex-direction: column;
+  }
+  .detail header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--line);
+    padding: 8px 14px;
+    font: 12px var(--mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .detail header .tag { color: var(--accent); }
+  .detail .fig { padding: 18px 20px 4px; border-bottom: 1px dashed var(--line-soft); }
+  .detail .body { padding: 16px 20px 20px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .detail h3 { font-size: 21px; }
+  .detail p { margin: 0; }
+  .detail ul { margin: 0; padding-left: 18px; color: var(--ink-soft); font-size: 15px; }
+  .detail li { margin-bottom: 4px; }
+  .detail .stack { font: 12px/1.7 var(--mono); color: var(--ink-soft); }
+  .detail .go { margin-top: auto; padding-top: 8px; font: 13px var(--mono); }
+  .detail.wide { grid-column: 1 / -1; }
+  code { font: 0.88em var(--mono); background: var(--accent-soft); padding: 1px 4px; }
+
+  /* bill of materials */
+  .bom td:first-child { font: 13px var(--mono); color: var(--accent); width: 48px; }
+  .bom td:nth-child(2) { font-weight: 500; width: 190px; }
+  .bom td:nth-child(3) { font: 13.5px/1.7 var(--mono); color: var(--ink-soft); }
+
+  /* title block */
+  .titleblock {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1.5px solid var(--line);
+  }
+  .titleblock > div { padding: 12px 14px; background: var(--paper); }
+  .titleblock .k { font: 10.5px var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); display: block; }
+  .titleblock .v { font-size: 16px; overflow-wrap: anywhere; }
+  .titleblock .name { grid-row: span 2; display: flex; flex-direction: column; justify-content: space-between; }
+  .titleblock .name .v { font: 600 30px/1 var(--cond); text-transform: uppercase; margin-top: 10px; }
+  .titleblock .name p { margin: 14px 0 0; color: var(--ink-soft); font-size: 15px; }
+  .titleblock .status .v { color: var(--accent); }
+
+  footer {
+    padding: 18px 28px;
+    font: 12px var(--mono);
+    color: var(--ink-soft);
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--line-soft);
+  }
+
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero figure { max-width: 460px; }
+    .details { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 640px) {
+    .sheet { margin: 16px; outline-offset: 4px; }
+    .zones { display: none; }
+    .strip { padding: 10px 16px; flex-direction: column; align-items: flex-start; }
+    .inner { padding: 0 16px; }
+    footer { padding: 16px; }
+    section { padding: 40px 0; }
+    .lede { font-size: 17px; }
+
+    .rev thead, .bom thead { display: none; }
+    .rev tr, .bom tr { display: grid; grid-template-columns: 44px 1fr; border-top: 1px solid var(--line-soft); padding: 12px 0; }
+    .rev td, .bom td { border: 0; padding: 0 0 4px; }
+    .rev td:first-child, .bom td:first-child { grid-row: span 2; width: auto; }
+    .rev .when { width: auto; white-space: normal; }
+    .bom td:nth-child(2) { width: auto; }
+
+    .titleblock { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .titleblock .name { grid-row: auto; grid-column: 1 / -1; }
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <div class="zones" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span></div>
+
+  <div class="strip">
+    <span>TP-001 &nbsp;/&nbsp; PORTFOLIO &nbsp;/&nbsp; SHEET 1 OF 1</span>
+    <nav aria-label="Sections">
+      <a href="#work">01 Work</a>
+      <a href="#details">02 Projects</a>
+      <a href="#bom">03 Tools</a>
+      <a href="#contact">04 Contact</a>
+      <button class="theme-btn" id="theme" type="button">Blueprint</button>
+    </nav>
+  </div>
+
+  <main class="inner">
+    <section class="hero" aria-labelledby="name">
+      <div>
+        <p class="label">DevOps engineer &middot; Noida, India</p>
+        <h1 id="name">Tushar<br>Panchal</h1>
+        <p class="lede">I build the networks and pipelines that applications run on: hub-and-spoke layouts on AWS, Azure and GCP, private Kubernetes clusters, and CI that never holds a cloud key.</p>
+        <p class="aside">I trained as a mechanical engineer before moving into infrastructure. The drawing sheet is a nod to that. Most of the habits carried over too: draw it first, label everything, keep a revision history.</p>
+        <div class="links">
+          <a href="https://github.com/Tushar-ops23">GitHub</a>
+          <a href="https://www.linkedin.com/in/tushar-panchal23/">LinkedIn</a>
+          <a href="mailto:tusharpanchal529@gmail.com">tusharpanchal529@gmail.com</a>
+        </div>
+      </div>
+
+      <figure>
+        <svg viewBox="0 0 420 330" role="img" aria-labelledby="fig1-title">
+          <title id="fig1-title">Hub-and-spoke: spoke networks send all outbound traffic through a shared hub with a firewall and NAT; spokes have no direct path to each other or to the internet.</title>
+          <defs>
+            <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="arrow"/></marker>
+            <marker id="ar-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="arrow-acc"/></marker>
+          </defs>
+
+          <!-- internet -->
+          <rect x="160" y="8" width="100" height="34" class="box dash" rx="17"/>
+          <text x="210" y="29" text-anchor="middle">internet</text>
+
+          <!-- hub -->
+          <path d="M210 118 V46" class="acc" marker-end="url(#ar-acc)"/>
+          <rect x="140" y="118" width="140" height="78" class="hub"/>
+          <text x="210" y="142" text-anchor="middle" class="big">HUB</text>
+          <text x="210" y="161" text-anchor="middle" class="soft">firewall &middot; NAT</text>
+          <text x="210" y="176" text-anchor="middle" class="soft">api gateway &middot; DNS</text>
+
+          <!-- spokes -->
+          <path d="M92 262 L160 196" class="ln spoke-path" marker-end="url(#ar)"/>
+          <path d="M328 262 L260 196" class="ln spoke-path" marker-end="url(#ar)"/>
+          <rect x="22" y="262" width="120" height="58" class="box"/>
+          <text x="82" y="286" text-anchor="middle" class="big">DEV</text>
+          <text x="82" y="304" text-anchor="middle" class="soft">private k8s</text>
+          <rect x="278" y="262" width="120" height="58" class="box"/>
+          <text x="338" y="286" text-anchor="middle" class="big">PROD</text>
+          <text x="338" y="304" text-anchor="middle" class="soft">private k8s</text>
+
+          <!-- no direct spoke-to-spoke -->
+          <path d="M146 291 H274" class="ln-soft dash"/>
+          <path d="M203 284 l14 14 M217 284 l-14 14" class="no-go"/>
+          <text x="210" y="318" text-anchor="middle" class="soft">no direct path</text>
+
+          <!-- callouts -->
+          <circle cx="112" cy="232" r="2.5" class="dot"/>
+          <path d="M112 232 L40 212 H14" class="ln-soft"/>
+          <text x="14" y="206" class="soft">0.0.0.0/0 &#8594; hub</text>
+
+          <circle cx="280" cy="140" r="2.5" class="dot"/>
+          <path d="M280 140 L330 110 H408" class="ln-soft"/>
+          <text x="332" y="104" class="soft">only way out</text>
+
+        </svg>
+        <figcaption><b>FIG. 1</b> &mdash; The layout I keep coming back to, on all three clouds. Spokes can't reach the internet or each other except through the hub.</figcaption>
+      </figure>
+    </section>
+
+    <section id="work" aria-labelledby="work-h">
+      <h2 id="work-h"><span class="no">01</span>Revision history</h2>
+      <table class="rev">
+        <thead><tr><th>Rev</th><th>Date</th><th>Change</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>D</td>
+            <td class="when">Oct 2024 &ndash; now</td>
+            <td>
+              <h3>DevOps Engineer</h3>
+              <p class="where">Ksolves India Limited, Noida</p>
+              <ul>
+                <li>Built a hub-and-spoke network on AWS with Terraform: shared ALB, WAF, CloudFront, NAT and VPN in the hub, EKS, RDS and ECR in private spokes behind Transit Gateway. Provisioning time dropped by about 60% and workloads lost all direct internet exposure.</li>
+                <li>Rebuilt the same pattern on GCP (Apigee X, Cloud Armor, Private Service Connect) and Azure (AKS, Key Vault CSI, VNet peering) so all three clouds share one blueprint.</li>
+                <li>Wrote a 3-stage Azure DevOps pipeline: hub, then a self-hosted autoscaling agent, then the spoke, then wiring the spoke's internal NLB into the hub ALB. One run gives a full environment.</li>
+                <li>Replaced long-lived GCP service account keys with Workload Identity Federation, and added scheduled start/stop for non-prod compute.</li>
+                <li>Run 15+ Helm releases on private EKS and GKE (app portals, Vault, NiFi, RabbitMQ, ClickHouse) with Istio, HPA, and Vault + CSI for secrets.</li>
+                <li>Added Trivy, Gitleaks and SonarQube gates to every Kubernetes delivery pipeline.</li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>C</td>
+            <td class="when">Feb &ndash; Jun 2024</td>
+            <td>
+              <h3>DevOps Engineer</h3>
+              <p class="where">BUOPSO Pvt Ltd, Noida</p>
+              <ul>
+                <li>Ran 8 microservices on Docker Swarm across bare-metal VMs with start-first rolling updates, no downtime on deploys. Developer environment setup went from 2 days to under 2 hours.</li>
+                <li>Set GitLab up as the team's platform: branch protection, MR approvals, build &rarr; test &rarr; deploy pipelines for 3 product squads.</li>
+                <li>Moved database credentials and API tokens out of app configs into HashiCorp Vault with TTL-based rotation and per-service policies.</li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>B</td>
+            <td class="when">2024</td>
+            <td>
+              <h3>B.Tech, Mechanical Engineering</h3>
+              <p class="where">Ganga Institute of Technology &amp; Management (MDU)</p>
+            </td>
+          </tr>
+          <tr>
+            <td>A</td>
+            <td class="when">2019</td>
+            <td>
+              <h3>Diploma, Mechanical Engineering</h3>
+              <p class="where">Pusa Institute of Technology (BTE)</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="details" aria-labelledby="details-h">
+      <h2 id="details-h"><span class="no">02</span>Details</h2>
+      <p class="intro-note">The three hub-and-spoke repos are public rebuilds of designs I run at work, written from scratch so they can be shared. Each one has CI that runs <code>terraform validate</code>, tflint, Trivy and Gitleaks on every push.</p>
+
+      <div class="details">
+        <article class="detail">
+          <header><span>Detail A</span><span class="tag">AWS</span></header>
+          <div class="fig">
+            <svg viewBox="0 0 300 110" role="img" aria-label="Spoke VPCs attach to a Transit Gateway, which sends traffic to the hub's Network Firewall and NAT.">
+              <rect x="4" y="12" width="70" height="30" class="box"/><text x="39" y="31" text-anchor="middle">dev</text>
+              <rect x="4" y="66" width="70" height="30" class="box"/><text x="39" y="85" text-anchor="middle">prod</text>
+              <circle cx="128" cy="54" r="20" class="hub"/><text x="128" y="58" text-anchor="middle">TGW</text>
+              <path d="M74 27 L110 45 M74 81 L110 63" class="ln"/>
+              <rect x="176" y="34" width="72" height="40" class="box"/><text x="212" y="51" text-anchor="middle">firewall</text><text x="212" y="65" text-anchor="middle" class="soft">+ NAT</text>
+              <path d="M148 54 H176" class="acc"/>
+              <path d="M248 54 H292" class="acc dash"/><text x="270" y="46" text-anchor="middle" class="soft">out</text>
+            </svg>
+          </div>
+          <div class="body">
+            <h3>aws-hub-spoke-terraform</h3>
+            <p>Spoke VPCs have no internet gateway. Everything leaves through Transit Gateway to a hub with Network Firewall (domain allowlist) and NAT, and replies come back through the firewall too.</p>
+            <ul>
+              <li>Two TGW route tables so spoke-to-spoke traffic is inspected as well</li>
+              <li>Private EKS, IRSA scoped to a single service account, SSM-only admin host</li>
+              <li>GitHub Actions deploys via OIDC; PR plans use a read-only role</li>
+            </ul>
+            <p class="stack">Terraform &middot; Transit Gateway &middot; Network Firewall &middot; EKS &middot; IRSA</p>
+            <p class="go"><a href="https://github.com/Tushar-ops23/aws-hub-spoke-terraform">github.com/Tushar-ops23/aws-hub-spoke-terraform &rarr;</a></p>
+          </div>
+        </article>
+
+        <article class="detail">
+          <header><span>Detail B</span><span class="tag">Azure</span></header>
+          <div class="fig">
+            <svg viewBox="0 0 300 110" role="img" aria-label="Spoke VNets peer with the hub VNet and use a user-defined route to send all traffic to Azure Firewall.">
+              <rect x="4" y="12" width="70" height="30" class="box"/><text x="39" y="31" text-anchor="middle">dev</text>
+              <rect x="4" y="66" width="70" height="30" class="box"/><text x="39" y="85" text-anchor="middle">prod</text>
+              <rect x="140" y="30" width="92" height="48" class="hub"/><text x="186" y="50" text-anchor="middle">Azure</text><text x="186" y="64" text-anchor="middle">Firewall</text>
+              <path d="M74 27 L140 44 M74 81 L140 64" class="ln dash"/>
+              <text x="104" y="22" text-anchor="middle" class="soft">peering</text>
+              <text x="104" y="104" text-anchor="middle" class="soft">UDR 0/0</text>
+              <path d="M232 54 H292" class="acc dash"/><text x="262" y="46" text-anchor="middle" class="soft">out</text>
+            </svg>
+          </div>
+          <div class="body">
+            <h3>azure-hub-spoke-terraform</h3>
+            <p>Each spoke's subnet has one route, 0.0.0.0/0 to the firewall's private IP, and AKS runs with <code>userDefinedRouting</code> so it never gets its own way out.</p>
+            <ul>
+              <li>Private AKS with local accounts disabled, Entra ID RBAC, CNI overlay + Cilium</li>
+              <li>Workload identity and Key Vault over private endpoint, secrets mounted by CSI</li>
+              <li>Privatelink DNS zones hosted once in the hub, linked from every spoke</li>
+            </ul>
+            <p class="stack">Terraform &middot; Azure Firewall &middot; AKS &middot; Key Vault &middot; workload identity</p>
+            <p class="go"><a href="https://github.com/Tushar-ops23/azure-hub-spoke-terraform">github.com/Tushar-ops23/azure-hub-spoke-terraform &rarr;</a></p>
+          </div>
+        </article>
+
+        <article class="detail">
+          <header><span>Detail C</span><span class="tag">GCP</span></header>
+          <div class="fig">
+            <svg viewBox="0 0 300 110" role="img" aria-label="Clients reach a load balancer and Apigee, which connects to spoke GKE clusters only through Private Service Connect.">
+              <rect x="4" y="38" width="56" height="32" class="box"/><text x="32" y="58" text-anchor="middle">ALB</text>
+              <path d="M60 54 H96" class="ln"/>
+              <rect x="96" y="30" width="78" height="48" class="hub"/><text x="135" y="58" text-anchor="middle">Apigee</text>
+              <path d="M174 45 L226 27 M174 63 L226 81" class="acc dash"/>
+              <text x="200" y="104" text-anchor="middle" class="soft">PSC only</text>
+              <rect x="226" y="12" width="70" height="30" class="box"/><text x="261" y="31" text-anchor="middle">dev</text>
+              <rect x="226" y="66" width="70" height="30" class="box"/><text x="261" y="85" text-anchor="middle">prod</text>
+            </svg>
+          </div>
+          <div class="body">
+            <h3>gcp-hub-spoke-terraform</h3>
+            <p>Apigee X is the front door, and the only link to the spokes is Private Service Connect. No peering, so spoke ranges can even overlap.</p>
+            <ul>
+              <li>External ALB &rarr; PSC NEG &rarr; Apigee, with Cloud Armor WAF and rate limits; no proxy VMs</li>
+              <li>Private GKE with the DNS-based control plane endpoint, so no bastion</li>
+              <li>Deny-by-default egress policy; Google APIs through private.googleapis.com</li>
+            </ul>
+            <p class="stack">Terraform &middot; Apigee X &middot; Private Service Connect &middot; GKE &middot; Cloud Armor</p>
+            <p class="go"><a href="https://github.com/Tushar-ops23/gcp-hub-spoke-terraform">github.com/Tushar-ops23/gcp-hub-spoke-terraform &rarr;</a></p>
+          </div>
+        </article>
+
+        <article class="detail">
+          <header><span>Detail D</span><span class="tag">Side project</span></header>
+          <div class="fig">
+            <svg viewBox="0 0 300 110" role="img" aria-label="Caddy in front of a FastAPI app backed by PostgreSQL and Redis, deployed by GitHub Actions.">
+              <rect x="4" y="38" width="60" height="32" class="box"/><text x="34" y="58" text-anchor="middle">Caddy</text>
+              <path d="M64 54 H100" class="ln"/>
+              <rect x="100" y="34" width="84" height="40" class="hub"/><text x="142" y="58" text-anchor="middle">FastAPI</text>
+              <path d="M184 46 L220 27 M184 62 L220 81" class="ln"/>
+              <rect x="220" y="12" width="76" height="30" class="box"/><text x="258" y="31" text-anchor="middle">Postgres</text>
+              <rect x="220" y="66" width="76" height="30" class="box"/><text x="258" y="85" text-anchor="middle">Redis</text>
+            </svg>
+          </div>
+          <div class="body">
+            <h3>StatusPulse</h3>
+            <p>A small status page and health-check API that I run end to end on one server: build, deploy, TLS, monitoring and backups.</p>
+            <ul>
+              <li>Docker Compose behind Caddy with automatic HTTPS</li>
+              <li>GitHub Actions: lint and test, push to GHCR, deploy over SSH</li>
+              <li>Uptime Kuma, a cron health monitor, and daily database backups</li>
+            </ul>
+            <p class="stack">FastAPI &middot; PostgreSQL &middot; Redis &middot; Docker &middot; GitHub Actions</p>
+            <p class="go"><a href="https://github.com/Tushar-ops23/statuspulse">github.com/Tushar-ops23/statuspulse &rarr;</a></p>
+          </div>
+        </article>
+
+        <article class="detail wide">
+          <header><span>Detail E</span><span class="tag">Internal tool</span></header>
+          <div class="body">
+            <h3>Deployment failure RCA agent</h3>
+            <p>An agent built on Claude that reads CloudWatch logs when an ECS/Fargate deployment fails, works out the root cause, and posts a plain-English explanation and suggested fix to the team from CodePipeline. Fixes only run after a human approves them, under a narrowly scoped IAM role, with every action written to an audit table in RDS. Average time to resolve a failed deployment went from about 45 minutes to under 10.</p>
+            <p class="stack">AWS ECS/Fargate &middot; CloudWatch &middot; CodePipeline &middot; RDS &middot; Claude</p>
+            <p class="go">Built at work; not public.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="bom" aria-labelledby="bom-h">
+      <h2 id="bom-h"><span class="no">03</span>Bill of materials</h2>
+      <table class="bom">
+        <thead><tr><th>Item</th><th>Part</th><th>Specifics</th></tr></thead>
+        <tbody>
+          <tr><td>01</td><td>Infrastructure as code</td><td>Terraform (modules across AWS, Azure, GCP), Helm, Ansible, Bash</td></tr>
+          <tr><td>02</td><td>AWS</td><td>EKS, ECR, Transit Gateway, ALB/NLB, WAF, CloudFront, RDS, S3, Secrets Manager, CodePipeline, CloudWatch</td></tr>
+          <tr><td>03</td><td>GCP</td><td>GKE, Apigee X, Private Service Connect, Cloud Armor, Cloud CDN, Cloud SQL, Artifact Registry, Secret Manager</td></tr>
+          <tr><td>04</td><td>Azure</td><td>AKS, ACR, Key Vault, Application Gateway, Front Door</td></tr>
+          <tr><td>05</td><td>Kubernetes</td><td>Istio, NGINX Ingress, HPA, ArgoCD, Docker, Docker Swarm, ECS/Fargate</td></tr>
+          <tr><td>06</td><td>CI/CD</td><td>Azure DevOps, GitHub Actions, GitLab CI, Jenkins, CodePipeline</td></tr>
+          <tr><td>07</td><td>Security</td><td>HashiCorp Vault, Secrets Store CSI, workload identity (IRSA / Azure / GCP), Trivy, Gitleaks, SonarQube, RBAC</td></tr>
+          <tr><td>08</td><td>Observability</td><td>Prometheus, Grafana, OpenTelemetry, Jaeger, Loki, CloudWatch</td></tr>
+          <tr><td>09</td><td>Languages</td><td>Bash, Python (working knowledge), Go (basics)</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="contact" aria-labelledby="contact-h">
+      <h2 id="contact-h"><span class="no">04</span>Title block</h2>
+      <div class="titleblock">
+        <div class="name">
+          <span class="k">Drawn by</span>
+          <span class="v">Tushar Panchal</span>
+          <p>If you're hiring for DevOps, platform or cloud infrastructure work, email is the fastest way to reach me.</p>
+        </div>
+        <div><span class="k">Email</span><span class="v"><a href="mailto:tusharpanchal529@gmail.com">tusharpanchal529@gmail.com</a></span></div>
+        <div><span class="k">Location</span><span class="v">Noida, India</span></div>
+        <div><span class="k">GitHub</span><span class="v"><a href="https://github.com/Tushar-ops23">Tushar-ops23</a></span></div>
+        <div><span class="k">LinkedIn</span><span class="v"><a href="https://www.linkedin.com/in/tushar-panchal23/">tushar-panchal23</a></span></div>
+        <div><span class="k">Scale</span><span class="v">NTS</span></div>
+        <div class="status"><span class="k">Status</span><span class="v">Open to new roles</span></div>
+        <div><span class="k">Date</span><span class="v">Sep 2026</span></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>One HTML file on GitHub Pages. No framework, no tracking.</span>
+    <span>REV D &middot; 2026</span>
+  </footer>
+  <div class="zones bottom" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span></div>
+</div>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var btn = document.getElementById("theme");
+    var mq = window.matchMedia("(prefers-color-scheme: dark)");
+    function current() { return root.dataset.theme || (mq.matches ? "dark" : "light"); }
+    function label() { btn.textContent = current() === "dark" ? "Paper" : "Blueprint"; }
+    btn.addEventListener("click", function () {
+      var next = current() === "dark" ? "light" : "dark";
+      root.dataset.theme = next;
+      try { localStorage.setItem("theme", next); } catch (e) {}
+      label();
+    });
+    mq.addEventListener("change", label);
+    label();
+  })();
+</script>
+</body>
+</html>
