@@ -166,9 +166,10 @@
   .chips li { font-size: 12px; font-weight: 500; background: var(--violet-bg); color: #5b21b6; padding: 3px 10px; border-radius: 999px; }
   .proj .go { margin-top: auto; font-weight: 600; font-size: 14.5px; display: inline-flex; gap: 6px; align-items: center; }
   .proj .go.muted { color: var(--muted); font-weight: 500; }
-  .proj.wide { grid-column: span 2; }
+  .proj.wide { grid-column: 1 / -1; }
   .proj.wide .inner { display: grid; grid-template-columns: 0.9fr 1.1fr; height: 100%; }
   .proj.wide .art { aspect-ratio: auto; }
+  .proj.wide .art svg { max-width: 340px; height: auto; }
   @media (max-width: 980px) { .proj-grid { grid-template-columns: repeat(2, 1fr); } .proj.wide { grid-column: 1 / -1; } }
   @media (max-width: 640px) { .proj-grid { grid-template-columns: 1fr; } .proj.wide .inner { grid-template-columns: 1fr; } .proj.wide .art { aspect-ratio: 16 / 9; } }
 
@@ -453,7 +454,7 @@
         <article class="proj wide reveal">
           <div class="inner">
             <div class="art" aria-hidden="true">
-              <svg viewBox="0 0 260 146"><rect x="10" y="18" width="80" height="32" rx="8" class="b"/><text x="50" y="38" text-anchor="middle">ECS deploy fails</text><path d="M50 50 V70" class="l"/><rect x="10" y="70" width="80" height="50" rx="10" class="h"/><text x="50" y="92" text-anchor="middle" class="ht">RCA agent</text><text x="50" y="108" text-anchor="middle" class="ht">reads logs</text><path d="M90 95 H130" class="a"/><rect x="130" y="72" width="54" height="46" rx="8" class="b"/><text x="157" y="92" text-anchor="middle">human</text><text x="157" y="106" text-anchor="middle">approves</text><path d="M184 95 H210" class="l"/><rect x="210" y="76" width="42" height="38" rx="8" class="b"/><text x="231" y="99" text-anchor="middle">fix</text></svg>
+              <svg viewBox="0 0 260 146"><rect x="2" y="18" width="96" height="32" rx="8" class="b"/><text x="50" y="38" text-anchor="middle">ECS deploy fails</text><path d="M50 50 V70" class="l"/><rect x="10" y="70" width="80" height="50" rx="10" class="h"/><text x="50" y="92" text-anchor="middle" class="ht">RCA agent</text><text x="50" y="108" text-anchor="middle" class="ht">reads logs</text><path d="M90 95 H130" class="a"/><rect x="130" y="72" width="54" height="46" rx="8" class="b"/><text x="157" y="92" text-anchor="middle">human</text><text x="157" y="106" text-anchor="middle">approves</text><path d="M184 95 H210" class="l"/><rect x="210" y="76" width="42" height="38" rx="8" class="b"/><text x="231" y="99" text-anchor="middle">fix</text></svg>
             </div>
             <div class="body">
               <p class="kind">AWS · AI agent</p>
@@ -462,18 +463,6 @@
               <ul class="chips"><li>ECS/Fargate</li><li>CloudWatch</li><li>CodePipeline</li><li>RDS</li></ul>
               <span class="go muted">Internal project, code not public</span>
             </div>
-          </div>
-        </article>
-        <article class="proj reveal">
-          <div class="art" aria-hidden="true">
-            <svg viewBox="0 0 260 146"><rect x="8" y="58" width="56" height="30" rx="8" class="b"/><text x="36" y="77" text-anchor="middle">Caddy</text><path d="M64 73 H92" class="l"/><rect x="92" y="50" width="76" height="46" rx="10" class="h"/><text x="130" y="77" text-anchor="middle" class="ht">FastAPI</text><path d="M168 62 L196 34 M168 84 L196 112" class="l"/><rect x="196" y="16" width="56" height="30" rx="8" class="b"/><text x="224" y="35" text-anchor="middle">Postgres</text><rect x="196" y="100" width="56" height="30" rx="8" class="b"/><text x="224" y="119" text-anchor="middle">Redis</text></svg>
-          </div>
-          <div class="body">
-            <p class="kind">Side project</p>
-            <h3>StatusPulse</h3>
-            <p>A status page and health-check API run end to end on one server: Docker Compose behind Caddy with automatic HTTPS, GitHub Actions to GHCR, Uptime Kuma and nightly backups.</p>
-            <ul class="chips"><li>FastAPI</li><li>Docker</li><li>Caddy</li><li>GitHub Actions</li></ul>
-            <a class="go" href="https://github.com/Tushar-ops23/statuspulse">View on GitHub →</a>
           </div>
         </article>
       </div>
